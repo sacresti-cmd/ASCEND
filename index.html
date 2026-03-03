@@ -287,11 +287,11 @@
             `).join('');
         }
 
-        // STABLE API CALL LOGIC
+        // STABLE PRODUCTION API CALL (v1 Endpoint)
         async function callGemini(prompt, imageData = null) {
             if (!apiKey) return "KEY_MISSING";
             
-            // Stable v1 endpoint for production reliability
+            // Fixed: Using v1 stable endpoint to prevent "model not found in v1beta"
             const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
             
             const contents = [{ 
@@ -318,13 +318,13 @@
                 const data = await response.json();
 
                 if (data.error) {
-                    console.error("Gemini API Error:", data.error);
-                    return `System Error: ${data.error.message}. Ensure your key is valid and the Generative Language API is enabled in Google Cloud.`;
+                    console.error("Gemini API Error Detail:", data.error);
+                    return `System Error: ${data.error.message}. Please check if the 'Generative Language API' is enabled for your key in Google AI Studio.`;
                 }
 
                 return data.candidates?.[0]?.content?.parts?.[0]?.text || "Analysis complete. System standing by.";
             } catch (e) {
-                console.error("Network Error:", e);
+                console.error("Network Exception:", e);
                 return "Connection lost. Re-verify API Key in System Access.";
             }
         }
